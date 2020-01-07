@@ -1,9 +1,15 @@
 const Book = require('../models/Book');
 const { Op } = require('sequelize');
+const redis = require('../database/cache')
 
 
 exports.getAllBooks = async (req, res) => {
   try {
+    redis.exists('listBooks', (err, reply) => {
+      if (reply === 1)
+        redis.hmget('listBooks', (err, result) => { if (!err) res.status(500).send(result); });
+    });
+
     const result = await Book.findAll()
     res.status(200).send(result)
   } catch (error) {
