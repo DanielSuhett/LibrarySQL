@@ -4,9 +4,9 @@
 ## Objetivo
 
 * Aplicação afim de desenvolver a stack em recursos como 
-	* Configuração de uma database SQL
+  * Configuração de uma database SQL
   * Realizar operações de CRUD com ORM Sequelize
-	* Diminuir o tempo de resposta usando cache
+  * Diminuir o tempo de resposta usando cache
 
 ## Stack
 
