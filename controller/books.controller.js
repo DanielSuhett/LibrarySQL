@@ -3,15 +3,17 @@ const { Op } = require('sequelize');
 const redis = require('../database/cache')
 
 
-exports.getAllBooks = async (req, res) => {
+exports.getAllBooks = (req, res) => {
   try {
-    redis.exists('listBooks', (err, reply) => {
-      if (reply === 1)
-        redis.hmget('listBooks', (err, result) => { if (!err) res.status(500).send(result); });
+    redis.get('listBooks', async (err, result) => {
+      if (result)
+        res.status(200).send(result);
+      else {
+        const result = await Book.findAll()
+        redis.set('listBooks', JSON.stringify(result));
+        res.status(200).send(result)
+      }
     });
-
-    const result = await Book.findAll()
-    res.status(200).send(result)
   } catch (error) {
     res.status(500).send("Error on controller: \n" + error)
   }
@@ -59,6 +61,7 @@ exports.insertBook = async (req, res) => {
         throw 'Need author to insert new book';
 
       const result = await Book.create({ title, author });
+      redis.del('listBooks');
       res.status(200).send({ created: true, data: result });
     }
   } catch (err) {
@@ -73,9 +76,10 @@ exports.updateBook = async (req, res) => {
       throw 'Need payload to update!'
     else {
       const result = await Book.update(req.body, { where: { id } })
-      if (result)
+      if (result){
+        redis.del('listBooks');
         res.status(200).send({ update: true, data: req.body });
-      else
+      } else
         throw 'Not found book to update!'
     }
   } catch (err) {
