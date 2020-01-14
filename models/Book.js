@@ -6,7 +6,8 @@ class Book extends Model {
       title: DataTypes.STRING,
       author: DataTypes.STRING    
     }, {
-      sequelize
+      sequelize,
+      underscored: true
     })
   }
 }

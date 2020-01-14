@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       }, 
-    });
+    }, { underscored: true, freezeTableName: true });
   },
 
   down: (queryInterface, Sequelize) => {
