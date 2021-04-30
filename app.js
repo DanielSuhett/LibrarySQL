@@ -1,8 +1,14 @@
-const express = require('express')
+const express = require("express");
 const app = express();
+require("dotenv").config();
 
-require('./database/index')
-app.use(express.json())
+require("./database");
+require("./middleware")(app, express);
+require("./routes")(app);
 
-require('./routes/books.routes')(app)
-require('./config/server')(app)
+if (process.env.NODE_ENV !== "test")
+  app.listen(3000, () => {
+    console.log(`Server on 3000`);
+  });
+
+module.exports = app;
