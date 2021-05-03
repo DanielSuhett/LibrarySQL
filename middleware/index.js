@@ -1,7 +1,10 @@
 const { checkProps, formatResponse } = require("../utils");
+const cors = require("cors");
 
 module.exports = (app, express) => {
   app.use(express.json());
+
+  app.use(cors());
 
   app.use("*", (req, res, next) => {
     if (req.method === "POST" || req.method === "PUT") {

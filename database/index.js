@@ -7,7 +7,12 @@ const Product = require("../models");
 const sequelize = new Sequelize(database, username, password, {
   host,
   dialect: dialect,
-  logging: false
+  port: 3306,
+  maxConcurrentQueries: 100,
+  logging: false,
+  ssl: "Amazon RDS",
+  pool: { max: 5, min: 0, idle: 10000 },
+  timeout: 60000
 });
 
 Product.init(sequelize);
